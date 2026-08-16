@@ -1,0 +1,10 @@
+# k6 Auto-generated Performance Test Reports
+report1.html
+*.html
+
+# OS junk files
+.DS_Store
+Thumbs.db
+
+# Environment secret overrides
+.env
