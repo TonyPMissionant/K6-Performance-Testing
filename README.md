@@ -127,3 +127,29 @@ git rm --cached report1.html
 git add .
 git commit -m "chore: implement strict workspace filtering boundaries"
 ```
+---
+## 🧮 Code Mechanics & Architectural Breakdowns
+
+To ensure the framework remains accessible for engineers coming from minimal JavaScript backgrounds, this section outlines the underlying logic behind our custom data engines:
+
+### 1. Dynamic Range Math (`scenarios/pizza.js`)
+To simulate a real user selecting random bounds on the advanced menu, we generate custom calories using this structural blueprint:
+```javascript
+Math.floor(Math.random() * (MAX - MIN + 1)) + MIN
+```
+* **Range Calculation:** `(1200 - 500 + 1)` calculates a pool size of `701` possible integers (including the upper limit boundary).
+* **Decimal Truncation (`Math.floor`):** `Math.random()` rolls an arbitrary decimal value. Passing it to `Math.floor()` chops off the fractional remainders and rounds the value down to a clean, whole integer between `0` and `700`.
+* **Upward Floor Shift (`+ 500`):** Shifting the baseline integer ensure our values map precisely to realistic pizza configurations between `500` and `1200` calories.
+
+### 2. Data Flattening & Serialization
+Web servers cannot parse live, active JavaScript object trees over network lines. They can only interpret strings of plain text:
+* **`JSON.stringify()`**: Serializes and flattens dynamic multi-line arrays (like your `excludedTools` lists) into flat text payload blocks (`'{"excludedTools":["scissors"]}'`) capable of streaming over HTTP protocols.
+* **`JSON.parse()`**: Executed inside our fallback authentication layer. It performs the exact opposite role—un-flattening the server's raw text responses back into navigateable JavaScript data structures so our script can extract tokens dynamically.
+
+### 3. Whitespace-Insensitive Regular Expressions (`helpers/auth.js`)
+Modern single-page applications shift layouts or inject varying spacing characters across deployment updates. To keep our `setup()` token scraping robust, our regex engine breaks down as follows:
+```text
+/token\s*:\s*["']([A-Za-z0-9]+)["']/
+```
+* **`\s*`**: Matches zero or more consecutive space or tab characters, neutralizing any server-side formatting updates.
+* **`([A-Za-z0-9]+)`**: Forms a strict **Capture Group** isolating alphanumeric keys, which are then picked via a logical `||` (OR) utility and passed directly to your scenario headers as an authorized token credential.
