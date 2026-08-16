@@ -1,0 +1,42 @@
+# 🌟 This names your automated automation dashboard pipeline on GitHub
+name: Automated k6 Performance Regression Check
+
+# 🌟 This determines WHAT triggers our cloud machine to run your code
+on:
+  push:
+    branches: [ main ]  # Runs every time you commit or push code straight to the main branch
+  pull_request:
+    branches: [ main ]  # Runs if a coworker tries to merge a branch into main
+
+# 🌟 This defines the isolated tasks the cloud virtual server must execute
+jobs:
+  k6_load_test:
+    name: Execute Framework Scenarios
+    runs-on: ubuntu-latest  # Spawns a clean, lightning-fast Linux virtual machine in the cloud
+
+    steps:
+      # Step A: Download your repository files onto the clean Linux server
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1  # Optimization: Only fetches the latest snapshot to save time and bandwidth
+
+      # Step B: Install the raw k6 engine binary components on the Linux runner
+      - name: Setup Grafana k6 Core Engine
+        uses: grafana/setup-k6-action@v1
+
+      # Step C: Fire your orchestrator file and explicitly enforce the smoke profile configuration
+      - name: Run Modular Performance Scenarios
+        uses: grafana/run-k6-action@v1
+        with:
+          path: ./homepage_view.js
+          flags: --env TEST_PROFILE=smoke # 🌟 FORCE SMART ENVIRONMENT SWITCHING
+
+      # Step D: Preserve your HTML performance dashboard report as a downloadable artifact
+      - name: Save HTML Telemetry Report Dashboard
+        uses: actions/upload-artifact@v4
+        if: always()  # Crucial! Keeps the report even if your performance p(99) thresholds fail
+        with:
+          name: k6-html-performance-report
+          path: report1.html
+          retention-days: 7  # Automatically deletes the report zip from GitHub after 1 week to save space

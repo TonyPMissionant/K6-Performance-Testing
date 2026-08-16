@@ -52,5 +52,6 @@ const stressTestOptions = {
     },
 };
 
-// 🌟 EXPORT SWITCHBOARD: Simply change the trailing reference keyword to instantly swap profiles!
-export const testOptions = stressTestOptions; // Change to 'stressTestOptions' when you want to execute a heavy run
+// 🌟 DYNAMIC PROFILE SWITCHER: Looks for a command-line environment variable flag
+// If __ENV.TEST_PROFILE equals 'stress', it switches to stress mode. Otherwise, it runs a light smoke test.
+export const testOptions = (__ENV.TEST_PROFILE === 'stress') ? stressTestOptions : smokeTestOptions;
